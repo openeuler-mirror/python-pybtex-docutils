@@ -1,27 +1,15 @@
 Name:           python-pybtex-docutils
-Version:        0.2.1
-Release:        11
+Version:        1.0.1
+Release:        1
 Summary:        A docutils backend for pybtex
 License:        MIT
 URL:            https://github.com/mcmtroffaes/pybtex-docutils
-Source0:        https://files.pythonhosted.org/packages/source/p/pybtex-docutils/pybtex-docutils-%{version}.tar.gz
+Source0:        https://files.pythonhosted.org/packages/41/3b/69c21deab7974b76018124b441c059edc6d6cec970ac038e5f62682eac8a/pybtex-docutils-1.0.1.tar.gz
 BuildArch:      noarch
-BuildRequires:  python2-devel python2-docutils python2-nose python2-pybtex python2-setuptools
-BuildRequires:  python3-pybtex python3-setuptools python3-six python3-sphinx python3-nose-cov
-BuildRequires:  python2-six python2-sphinx python3-devel python3-docutils python3-nose
+BuildRequires:  python3-pybtex python3-setuptools python3-six python3-sphinx
+BuildRequires:  python3-devel python3-docutils python3-nose2 python3-pytest
 
 %description
-This package contains a docutils backend for pybtex, a BibTeX-compatible bibliography processor
-written in Python. Bibliographic references in BibTeX format (or any other format supported by
-pybtex) can be inserted into python documentation to be rendered by docutils.
-
-%package -n     python2-pybtex-docutils
-Summary:        Docutils backend for pybtex
-Requires:       python2-docutils python2-pybtex python2-six
-Provides:       bundled(jquery) bundled(js-underscore)
-%{?python_provide:%python_provide python2-pybtex-docutils}
-
-%description -n python2-pybtex-docutils
 This package contains a docutils backend for pybtex, a BibTeX-compatible bibliography processor
 written in Python. Bibliographic references in BibTeX format (or any other format supported by
 pybtex) can be inserted into python documentation to be rendered by docutils.
@@ -40,44 +28,32 @@ pybtex) can be inserted into python documentation to be rendered by docutils.
 %prep
 %autosetup -c
 sed -i "s/'default'/'alabaster'/" pybtex-docutils-%{version}/doc/conf.py
-cp -a pybtex-docutils-%{version} python3-pybtex-docutils-%{version}
-sed -i 's/"rb"/"rt"/' python3-pybtex-docutils-%{version}/doc/conf.py
+sed -i 's/"rb"/"rt"/' pybtex-docutils-%{version}/doc/conf.py
 
 %build
 cd pybtex-docutils-%{version}
-%py2_build
-PYTHONPATH=$PWD make -C doc html SPHINXBUILD=%{_bindir}/sphinx-build-%{python2_version}
-cd -
-cd python3-pybtex-docutils-%{version}
 %py3_build
 PYTHONPATH=$PWD make -C doc html SPHINXBUILD=%{_bindir}/sphinx-build-%{python3_version}
 cd -
 
 %install
 cd pybtex-docutils-%{version}
-%py2_install
-cd -
-cd python3-pybtex-docutils-%{version}
 %py3_install
 cd -
 
 %check
 cd pybtex-docutils-%{version}
-PYTHONPATH=$PWD nosetests-%{python2_version} -v
+PYTHONPATH=$PWD nose2-%{python3_version} -v
 cd -
-cd python3-pybtex-docutils-%{version}
-PYTHONPATH=$PWD nosetests-%{python3_version} -v
-cd -
-
-%files -n python2-pybtex-docutils
-%doc pybtex-docutils-%{version}/doc/_build/html/* pybtex-docutils-%{version}/LICENSE.rst
-%{python2_sitelib}/pybtex_docutils*
 
 %files -n python3-pybtex-docutils
-%doc python3-pybtex-docutils-%{version}/doc/_build/html/* python3-pybtex-docutils-%{version}/LICENSE.rst
+%doc pybtex-docutils-%{version}/doc/_build/html/* pybtex-docutils-%{version}/LICENSE.rst
 %{python3_sitelib}/pybtex_docutils*
-%{python3_sitelib}/__pycache__/pybtex_docutils*
+%{python3_sitelib}/pybtex_docutils/*
 
 %changelog
+* Tue May 31 2022 lvxiaoqian <xiaoqian@nj.iscas.ac.cn> - 1.0.1-1
+- update to 1.0.1
+
 * Fri Mar 6 2020 Ling Yang <lingyang2@huawei.com> - 0.2.1-11
 - Package Init
